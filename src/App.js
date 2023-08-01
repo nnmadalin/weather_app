@@ -96,40 +96,45 @@ function App() {
     <>
       <div className='container'>
         <div className='card_small'>
-          <div className='top_search'>
-            <FontAwesomeIcon icon={faMapMarkerAlt} size="lg"/>
-            <input type = "text" placeholder='Cauta o locatie' onChange={handleChange} value={inputlocation}/>
-            <button onClick={buttonSubmit}><FaSearch /></button>
+          <div className='top'>
+            <div className='top_search'>
+              <FontAwesomeIcon icon={faMapMarkerAlt} size="lg"/>
+              <input type = "text" placeholder='Cauta o locatie' onChange={handleChange} value={inputlocation}/>
+              <button onClick={buttonSubmit}><FaSearch /></button>
+            </div>    
           </div>
 
-          <div className='top_location'>
-            <h1>{location}</h1>
+          <div className='middle'>
+            <div className='middle_location'>
+              <h1>{location}</h1>
+            </div>
+            <div className='middle_icon'>
+              <img src={"icons/" + icon + ".svg"} />
+            </div>
+            
+            <div className='middle_degrees'>
+              <h1 className='degrees'>{temp}</h1>
+              <h1 className='celsius'>°{celsiussymbol}</h1>
+            </div>
+
+            <div className='middle_day'>
+              <h1 className='day'>{dayNames[(new Date()).getDay()]},</h1>
+              <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
+            </div>
           </div>
 
-          <div className='middle_icon'>
-            <img src={"icons/" + icon + ".svg"} />
-          </div>
-          
-          <div className='middle_degrees'>
-            <h1 className='degrees'>{temp}</h1>
-            <h1 className='celsius'>°{celsiussymbol}</h1>
-          </div>
+          <div className='bottom'>
+            <div className='separator'>
+              <hr />
+            </div>
 
-          <div className='middle_day'>
-            <h1 className='day'>{dayNames[(new Date()).getDay()]},</h1>
-            <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
-          </div>
-
-          <div className='separator'>
-            <hr />
-          </div>
-
-          <div className='created'>
-            <p>Neauna Madalin</p>
-            <div className='social'>
-              <a href='https://github.com/nnmadalin' target={"_blank"}><FaGithub /></a>
-              <a href='https://www.instagram.com/nnmadalin/' target={"_blank"}><FaInstagram /></a>
-              <a href='https://www.facebook.com/madalin.neauna' target={"_blank"}><FaFacebook /></a>
+            <div className='created'>
+              <p>Neauna Madalin</p>
+              <div className='social'>
+                <a href='https://github.com/nnmadalin' target={"_blank"}><FaGithub /></a>
+                <a href='https://www.instagram.com/nnmadalin/' target={"_blank"}><FaInstagram /></a>
+                <a href='https://www.facebook.com/madalin.neauna' target={"_blank"}><FaFacebook /></a>
+              </div>
             </div>
           </div>
         </div>
