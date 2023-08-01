@@ -81,7 +81,7 @@ function App() {
     else
       setcelsiussymbol('C');
     
-    api_call();
+    //api_call();
 
     //refresh page
     var timer = setInterval(() => setDate(new Date()), 1000);
@@ -96,7 +96,6 @@ function App() {
     <>
       <div className='container'>
         <div className='card_small'>
-
           <div className='top_search'>
             <FontAwesomeIcon icon={faMapMarkerAlt} size="lg"/>
             <input type = "text" placeholder='Cauta o locatie' onChange={handleChange} value={inputlocation}/>
@@ -135,7 +134,38 @@ function App() {
           </div>
         </div>
         <div className='card_big'>
-          
+          <div className='top'>
+            <div className='left'>
+              <button className='select'>Astăzi</button>
+              <button>Săptămână</button>
+            </div>
+            <div className='right'>
+              <button className='select'>°C</button>
+              <button>°F</button>
+            </div>
+          </div>
+
+          <div className='middle'>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+            <div className='card'></div>
+          </div>
+
+          <div className='bottom'>
+            <div className='row'>
+              <p>Informații generale despre astăzi</p>
+            </div>
+            <div className='contain'>
+              <div className='card'></div>
+              <div className='card'></div>
+              <div className='card'></div>
+              <div className='card'></div>
+              <div className='card'></div>
+              <div className='card'></div>
+            </div>
+          </div>
         </div>
       </div>
       

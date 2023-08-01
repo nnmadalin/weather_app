@@ -5,15 +5,19 @@ body, #root{
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
+  background-color: #CECFD2;
+}
+body{
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  flex-direction: column;
 }
 
 #root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
   background-color: #CECFD2;
 }
