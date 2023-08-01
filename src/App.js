@@ -6,26 +6,58 @@ import 'typeface-roboto';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
+
 function App() {
 
+  const [inputlocation, Setinputlocation] = useState('');
   const [celsiussymbol, setcelsiussymbol] = useState('C');
+  const [temp, setTemp] = useState('0');
+  const [location, setLocation] = useState('undefined');
+  const [icon, setIcon] = useState('question');
   const dayNames = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
   var [date, setDate] = useState(new Date());
-  const [inputValue, setInputValue] = useState(Cookies.get('city'));
 
-  const handleChangeAndSize = (ev) => {
-    const target = ev.target;
-    target.style.width = '10px';
-    target.style.width = `${target.scrollWidth}px`;
-
-    Cookies.set('city', target.value, { expires: 365 })
-
-    handleChange(ev);
+  const parse_json = (json) =>{
+    setLocation(json["resolvedAddress"]);
+    setIcon(json["currentConditions"]["icon"]);
+    setTemp(json["currentConditions"]["temp"]);
   };
 
-  const handleChange = (ev) => {
-    setInputValue(ev.target.value);
+  const handleChange = (event) => {
+    Setinputlocation(event.target.value);
   };
+
+  const api_call = async () =>{
+    var cityValue_first = Cookies.get('city');
+    if(inputlocation != ""){
+      Cookies.set('city', inputlocation, { expires: 365 });
+    }
+
+    var cityValue = Cookies.get('city');
+    var url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" 
+    + cityValue +
+    "?unitGroup=metric&include=events%2Ccurrent%2Cdays%2Chours%2Calerts&key="
+    + process.env.REACT_APP_WEATHER_API_KEY +
+    "&contentType=json";
+  
+    (async () => {
+      try {
+        const response = await fetch(url);
+        const parsed = await response.json();
+        parse_json(parsed);
+        Setinputlocation('');
+      } catch (error) {
+        Cookies.set('city', cityValue_first, { expires: 365 });
+      }
+    })();
+
+  };
+  
+  function buttonSubmit(e) {
+    e.preventDefault();
+    api_call();
+  }
+
 
   useEffect(() => {
 
@@ -38,7 +70,6 @@ function App() {
     if (!degreesValue) {
       Cookies.set('degrees', 'celsius', { expires: 365 });
     }
-
     //get cookie update
     cookieValue = Cookies.get('city');
     degreesValue = Cookies.get('degrees');
@@ -49,13 +80,16 @@ function App() {
     }
     else
       setcelsiussymbol('C');
+    
+    api_call();
 
     //refresh page
     var timer = setInterval(() => setDate(new Date()), 1000);
-      return function cleanup() {
+    return function cleanup() {
         clearInterval(timer);
     };
-
+    
+    
   }, []);
 
   return (
@@ -65,26 +99,26 @@ function App() {
 
           <div className='top_search'>
             <FontAwesomeIcon icon={faMapMarkerAlt} size="lg"/>
-            <input type = "text" placeholder='Cauta o locatie'/>
-            <button><FaSearch /></button>
+            <input type = "text" placeholder='Cauta o locatie' onChange={handleChange} value={inputlocation}/>
+            <button onClick={buttonSubmit}><FaSearch /></button>
           </div>
 
           <div className='top_location'>
-            <h1>undefined</h1>
+            <h1>{location}</h1>
           </div>
 
           <div className='middle_icon'>
-            <img src='icons/question.svg' />
+            <img src={"icons/" + icon + ".svg"} />
           </div>
           
           <div className='middle_degrees'>
-            <h1 className='degrees'>0</h1>
+            <h1 className='degrees'>{temp}</h1>
             <h1 className='celsius'>°{celsiussymbol}</h1>
           </div>
 
           <div className='middle_day'>
             <h1 className='day'>{dayNames[(new Date()).getDay()]},</h1>
-            <h1 className='hour'>{date.getHours() + ":" + date.getMinutes()}</h1>
+            <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
           </div>
 
           <div className='separator'>
