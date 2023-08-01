@@ -1,4 +1,6 @@
 .container{
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 90%;
   background-color: #F5F5F5;
   border-radius: 30px;
@@ -10,7 +12,6 @@
 .card_small{
   width: 400px;
   min-height: 100%;
-  flex: 1 1;
   display: flex;
   flex-direction: column;
 }
@@ -211,6 +212,10 @@
   color: #9c9c9c;
   cursor: pointer;
   background-color: transparent;
+  transition: all 0.2s;
+}
+.card_big .top .right button:hover{
+  transform: scale(1.1);
 }
 .card_big .top .left .select{
   color: black;
@@ -356,6 +361,7 @@
 @media only screen and (max-width: 930px){
   .container{
     flex-direction: column;
+    width: 95%;
   }
   .card_small{
     width: 100%;

@@ -11,13 +11,36 @@ function App() {
 
   const [inputlocation, Setinputlocation] = useState('');
   const [celsiussymbol, setcelsiussymbol] = useState('C');
+
   const [temp, setTemp] = useState('0');
   const [location, setLocation] = useState('undefined');
   const [icon, setIcon] = useState('question');
+
+  const [uv, setUv] = useState('0');
+  const [uvDescription, setUvDescription] = useState('undefined');
+  const [wind, setWind] = useState('0.00 km/h');
+  const [windDescription, setWindDescription] = useState('undefined');
+  const [sunrice, setSunrice] = useState('00:00');
+  const [sunset, setSunset] = useState('00:00');
+  const [season, setSeason] = useState('undefined');
+  const [humidity, setHumidity] = useState('00%');
+  const [humidityDescription, setHumidityDescription] = useState('undefined');
+  const [visibility, setVisibility] = useState('0');
+  const [visibilityDescription, setVisibilityDescription] = useState('undefined');
+  const [feelslike, setfeelslike] = useState('00.0');
+  const [feelslikeDescription, setfeelslikeDescription] = useState('undefined');
+
   const dayNames = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
   var [date, setDate] = useState(new Date());
 
+  const celcius_btn = useRef();
+  const fahrenheit_btn = useRef();
+
+  const today_btn = useRef();
+  const week_btn = useRef();
+
   const parse_json = (json) =>{
+    //card small
     setLocation(json["resolvedAddress"]);
     setIcon(json["currentConditions"]["icon"]);
     setTemp(json["currentConditions"]["temp"]);
@@ -58,6 +81,47 @@ function App() {
     api_call();
   }
 
+  function change_see(e) {
+    e.preventDefault();
+    
+  }
+
+  function change_celsius(e) {
+    e.preventDefault();
+
+    var degreesValue = Cookies.get('degrees');
+
+    if(e.target.value != degreesValue){
+
+      if(e.target.value == "celsius"){
+        Cookies.set('degrees', 'celsius', { expires: 365 });
+      }
+      else if(e.target.value == "fahrenheit"){
+        Cookies.set('degrees', 'fahrenheit', { expires: 365 });
+      }
+
+      
+
+      if(e.target.value == "fahrenheit"){
+        setcelsiussymbol('F');
+        fahrenheit_btn.current.style.backgroundColor = 'black';
+        fahrenheit_btn.current.style.color = 'white';
+
+        celcius_btn.current.style.backgroundColor = 'white';
+        celcius_btn.current.style.color = 'black';
+        setTemp(parseFloat(temp) + 32);
+      }
+      else{
+        setcelsiussymbol('C');
+        celcius_btn.current.style.backgroundColor = 'black';
+        celcius_btn.current.style.color = 'white';
+
+        fahrenheit_btn.current.style.backgroundColor = 'white';
+        fahrenheit_btn.current.style.color = 'black';
+        setTemp(parseFloat(temp) - 32);
+      }
+    }
+  }
 
   useEffect(() => {
 
@@ -77,9 +141,22 @@ function App() {
     //check if celsius
     if(degreesValue == "fahrenheit"){
       setcelsiussymbol('F');
+      fahrenheit_btn.current.style.backgroundColor = 'black';
+      fahrenheit_btn.current.style.color = 'white';
+
+      celcius_btn.current.style.backgroundColor = 'white';
+      celcius_btn.current.style.color = 'black';
+      console.log(parseFloat(temp));
+      setTemp(parseFloat(temp) + 32);
     }
-    else
+    else{
       setcelsiussymbol('C');
+      celcius_btn.current.style.backgroundColor = 'black';
+      celcius_btn.current.style.color = 'white';
+
+      fahrenheit_btn.current.style.backgroundColor = 'white';
+      fahrenheit_btn.current.style.color = 'black';
+    }
     
     //api_call();
 
@@ -141,12 +218,12 @@ function App() {
         <div className='card_big'>
           <div className='top'>
             <div className='left'>
-              <button className='select'>Astăzi</button>
-              <button>Săptămână</button>
+              <button ref={today_btn} value="today" onClick={change_see}>Astăzi</button>
+              <button ref={week_btn} value="week" onClick={change_see}>Săptămână</button>
             </div>
             <div className='right'>
-              <button className='select'>°C</button>
-              <button>°F</button>
+              <button ref={celcius_btn} value = "celsius" onClick={change_celsius}>°C</button>
+              <button ref={fahrenheit_btn} value = 'fahrenheit' onClick={change_celsius}>°F</button>
             </div>
           </div>
 
@@ -172,10 +249,10 @@ function App() {
                     <p className='title'>Indice UV</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>2</p>
+                    <p className='value'>{uv}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>Prost</p>
+                    <p className='value val_small'>{uvDescription}</p>
                   </div>
                 </div>
               </div>
@@ -188,10 +265,10 @@ function App() {
                     <p className='title'>Starea vântului</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>7.70 km/h</p>
+                    <p className='value'>{wind}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>wsw</p>
+                    <p className='value val_small'>{windDescription}</p>
                   </div>
                 </div>
               </div>
@@ -205,13 +282,13 @@ function App() {
                     <p className='title'>Răsărit & apus</p>
                   </div>
                   <div className='row row_flex_small'>
-                    <p className='value'>6:35</p>
+                    <p className='value'>{sunrice}</p>
                   </div>
                   <div className='row row_flex_small'>
-                    <p className='value'>20:55</p>
+                    <p className='value'>{sunset}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>Vara</p>
+                    <p className='value val_small'>{season}</p>
                   </div>
                 </div>
 
@@ -225,10 +302,10 @@ function App() {
                     <p className='title'>Umiditate</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>12 %</p>
+                    <p className='value'>{humidity}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>Normal</p>
+                    <p className='value val_small'>{humidityDescription}</p>
                   </div>
                 </div>
 
@@ -242,10 +319,10 @@ function App() {
                     <p className='title'>Visibilitate</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>5.2 km</p>
+                    <p className='value'>{visibility}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>Normal</p>
+                    <p className='value val_small'>{visibilityDescription}</p>
                   </div>
                 </div>
               </div>
@@ -255,13 +332,13 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Calitatea aerului</p>
+                    <p className='title'>Temperatura resimțită</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>105</p>
+                    <p className='value'>{feelslike}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>Prost</p>
+                    <p className='value val_small'>{feelslikeDescription  + "°" + celsiussymbol}</p>
                   </div>
                 </div>
 
