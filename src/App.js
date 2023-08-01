@@ -9,6 +9,7 @@ import './App.css';
 function App() {
 
   const [celsiussymbol, setcelsiussymbol] = useState('C');
+  const dayNames = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
 
   useEffect(() => {
     var cookieValue = Cookies.get('city');
@@ -56,8 +57,8 @@ function App() {
           </div>
 
           <div className='middle_day'>
-            <h1 className='day'>luni,</h1>
-            <h1 className='hour'>00:00</h1>
+            <h1 className='day'>{dayNames[(new Date()).getDay()]},</h1>
+            <h1 className='hour'>{(new Date()).getHours() + ":" + (new Date()).getMinutes()}</h1>
           </div>
 
           <div className='separator'>
