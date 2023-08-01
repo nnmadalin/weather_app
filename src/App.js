@@ -158,12 +158,109 @@ function App() {
               <p>Informații generale despre astăzi</p>
             </div>
             <div className='contain'>
-              <div className='card'></div>
-              <div className='card'></div>
-              <div className='card'></div>
-              <div className='card'></div>
-              <div className='card'></div>
-              <div className='card'></div>
+              <div className='card uv'>
+                <div className='image'>
+                  <img src = "weather/icons8-uv-index-64.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Indice UV</p>
+                  </div>
+                  <div className='row row_flex'>
+                    <p className='value'>2</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>Prost</p>
+                  </div>
+                </div>
+              </div>
+              <div className='card'>
+                <div className='image'>
+                  <img src = "weather/icons8-windy-64.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Starea vântului</p>
+                  </div>
+                  <div className='row row_flex'>
+                    <p className='value'>7.70 km/h</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>wsw</p>
+                  </div>
+                </div>
+              </div>
+              <div className='card'>
+                <div className='image img_special'>
+                  <img src = "weather/icons8-sun-64.png"/>
+                  <img className = "moon" src = "weather/icons8-moon-64.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Răsărit & apus</p>
+                  </div>
+                  <div className='row row_flex_small'>
+                    <p className='value'>6:35</p>
+                  </div>
+                  <div className='row row_flex_small'>
+                    <p className='value'>20:55</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>Vara</p>
+                  </div>
+                </div>
+
+              </div>
+              <div className='card'>
+                <div className='image'>
+                  <img src = "weather/icons8-humidity-64.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Umiditate</p>
+                  </div>
+                  <div className='row row_flex'>
+                    <p className='value'>12 %</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>Normal</p>
+                  </div>
+                </div>
+
+              </div>
+              <div className='card'>
+                <div className='image img_special_viz'>
+                  <img src = "weather/icons8-summer-64.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Visibilitate</p>
+                  </div>
+                  <div className='row row_flex'>
+                    <p className='value'>5.2 km</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>Normal</p>
+                  </div>
+                </div>
+              </div>
+              <div className='card'>
+                <div className='image'>
+                  <img src = "weather/icons8-air-100.png"/>
+                </div>
+                <div className='rows'>
+                  <div className='row row_title'>
+                    <p className='title'>Calitatea aerului</p>
+                  </div>
+                  <div className='row row_flex'>
+                    <p className='value'>105</p>
+                  </div>
+                  <div className='row'>
+                    <p className='value val_small'>Prost</p>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
