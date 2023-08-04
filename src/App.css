@@ -1,3 +1,4 @@
+
 .container{
   margin-top: 20px;
   margin-bottom: 20px;
@@ -8,6 +9,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   box-shadow: 0px 0px 60px 11px rgba(0,0,0,0.1);
+  transition: all 0.3s;
 }
 .card_small{
   width: 400px;
@@ -81,6 +83,13 @@
   justify-content: center;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
+}
+.row_special{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
 }
 .card_small .middle_location h1{
   max-width: 100%;
@@ -234,7 +243,7 @@
   color: white;
 }
 .card_big .middle {
-  margin-top: 50px;
+  margin-top: 20px;
   width: 100%;
   flex: 0 0 auto;
   display: flex;
@@ -244,16 +253,47 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+.card_big .middle .today, .card_big .middle .week{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 .card_big .middle .card{
   background-color: white;
-  width: 140px;
+  width: 130px;
   height: 160px;
   border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.card_big .middle .card .row{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  flex: 1;
+}
+.card_big .middle .card .row *{
+  margin: 0;
+  padding: 0;
+}
+.card_big .middle .card .flexing{
+  flex: 1;
+}
+.card_big .middle .card .row img{
+  max-width: 60px;
 }
 
-
 .card_big  .bottom{
-  margin-top: 40px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -358,7 +398,7 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
-@media only screen and (max-width: 930px){
+@media only screen and (max-width: 1000px){
   .container{
     flex-direction: column;
     width: 95%;

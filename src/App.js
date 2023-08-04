@@ -5,6 +5,11 @@ import Cookies from 'js-cookie';
 import 'typeface-roboto';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import DynamicCards from './DynamicCards';
+import { useHistory } from 'react-router-dom';
+
+
+
 
 
 function App() {
@@ -12,7 +17,7 @@ function App() {
   const [inputlocation, Setinputlocation] = useState('');
   const [celsiussymbol, setcelsiussymbol] = useState('C');
 
-  const [temp, setTemp] = useState('0');
+  const [temp_bigger, setTemp] = useState('00.0');
   const [location, setLocation] = useState('undefined');
   const [icon, setIcon] = useState('question');
 
@@ -32,6 +37,7 @@ function App() {
 
   const dayNames = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
   var [date, setDate] = useState(new Date());
+  const [divDataAPI, setdivDataAPI] = useState([]);
 
   const celcius_btn = useRef();
   const fahrenheit_btn = useRef();
@@ -39,11 +45,82 @@ function App() {
   const today_btn = useRef();
   const week_btn = useRef();
 
+  const data_API = [];
+  
+  function convert_f(temp){
+    return ((parseFloat(temp) * 9) / 5 + 32).toFixed(1);;
+  }
+
   const parse_json = (json) =>{
     //card small
     setLocation(json["resolvedAddress"]);
     setIcon(json["currentConditions"]["icon"]);
-    setTemp(json["currentConditions"]["temp"]);
+
+    var temp_calc = json["currentConditions"]["temp"];
+    if(Cookies.get('degrees') == "fahrenheit"){
+      temp_calc = convert_f(temp_calc);
+    }
+    setTemp(temp_calc);
+
+    var currentUrl = window.location.pathname;
+    const { days } = json;
+    if(currentUrl == "/week"){
+      const parsedData = days.map((day) => ({
+        datetime_parsed: day.datetime,
+        icon_parsed: day.icon,
+        temp_parsed: day.temp,
+      }));
+      parsedData.forEach((item, index) => {
+        if(index > 0 && index < 8){
+          const currentDate = new Date(item.datetime_parsed);
+          var datetime_new = dayNames[currentDate.getDay()];
+          
+          var temp_calc = item.temp_parsed;
+          if(Cookies.get('degrees') == "fahrenheit"){
+            temp_calc = convert_f(temp_calc) + "°F";
+          }
+          else
+          temp_calc += "°C";
+          
+          data_API.push({
+            day: datetime_new,
+            icon: item.icon_parsed,
+            degrees: temp_calc,
+          });
+        }
+      });
+    }
+    else{
+      const hours = json["days"]["0"]["hours"];
+      const parsedData = hours.map((hour) => ({
+        datetime_parsed: hour.datetime,
+        icon_parsed: hour.icon,
+        temp_parsed: hour.temp,
+      }));
+      
+      parsedData.forEach((item, index) => {
+        if(index % 2 == 0){
+          const [hours, minutes, seconds] = item.datetime_parsed.split(':');
+          var datetime_new = hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0');
+          
+          var temp_calc = item.temp_parsed;
+          if(Cookies.get('degrees') == "fahrenheit"){
+            temp_calc = convert_f(temp_calc) + "°F";
+          }
+          else
+          temp_calc += "°C";
+
+          data_API.push({
+            day: datetime_new,
+            icon: item.icon_parsed,
+            degrees: temp_calc,
+          });
+        }
+      });
+    }
+
+    setdivDataAPI(data_API);
+
   };
 
   const handleChange = (event) => {
@@ -82,45 +159,26 @@ function App() {
   }
 
   function change_see(e) {
-    e.preventDefault();
+    e.preventDefault();//#9c9c9c
+    var currentUrl = window.location.origin;
+  
+    if(e.target.value == "week"){
+      currentUrl += "/week";
+    }
     
+    window.location.href = currentUrl;
   }
 
   function change_celsius(e) {
     e.preventDefault();
-
-    var degreesValue = Cookies.get('degrees');
-
-    if(e.target.value != degreesValue){
-
-      if(e.target.value == "celsius"){
-        Cookies.set('degrees', 'celsius', { expires: 365 });
-      }
-      else if(e.target.value == "fahrenheit"){
-        Cookies.set('degrees', 'fahrenheit', { expires: 365 });
-      }
-
-      
-
-      if(e.target.value == "fahrenheit"){
-        setcelsiussymbol('F');
-        fahrenheit_btn.current.style.backgroundColor = 'black';
-        fahrenheit_btn.current.style.color = 'white';
-
-        celcius_btn.current.style.backgroundColor = 'white';
-        celcius_btn.current.style.color = 'black';
-        setTemp(parseFloat(temp) + 32);
-      }
-      else{
-        setcelsiussymbol('C');
-        celcius_btn.current.style.backgroundColor = 'black';
-        celcius_btn.current.style.color = 'white';
-
-        fahrenheit_btn.current.style.backgroundColor = 'white';
-        fahrenheit_btn.current.style.color = 'black';
-        setTemp(parseFloat(temp) - 32);
-      }
+    if(e.target.value == "celsius"){
+      Cookies.set('degrees', 'celsius', { expires: 365 });
     }
+    else if(e.target.value == "fahrenheit"){
+      Cookies.set('degrees', 'fahrenheit', { expires: 365 });
+    }
+
+    window.location.reload(false);
   }
 
   useEffect(() => {
@@ -128,6 +186,7 @@ function App() {
     //check cookie and create
     var cookieValue = Cookies.get('city');
     var degreesValue = Cookies.get('degrees');
+
     if (!cookieValue) {
       Cookies.set('city', 'Bucuresti', { expires: 365 });
     }
@@ -135,8 +194,8 @@ function App() {
       Cookies.set('degrees', 'celsius', { expires: 365 });
     }
     //get cookie update
-    cookieValue = Cookies.get('city');
     degreesValue = Cookies.get('degrees');
+    cookieValue = Cookies.get('city');
 
     //check if celsius
     if(degreesValue == "fahrenheit"){
@@ -146,8 +205,6 @@ function App() {
 
       celcius_btn.current.style.backgroundColor = 'white';
       celcius_btn.current.style.color = 'black';
-      console.log(parseFloat(temp));
-      setTemp(parseFloat(temp) + 32);
     }
     else{
       setcelsiussymbol('C');
@@ -157,17 +214,33 @@ function App() {
       fahrenheit_btn.current.style.backgroundColor = 'white';
       fahrenheit_btn.current.style.color = 'black';
     }
-    
-    //api_call();
 
+    today_btn.current.style.color = 'black';
+    
+    api_call();
+
+    today_btn.current.style.color = '#9c9c9c';
+    week_btn.current.style.color = '#9c9c9c';
+
+    if(window.location.pathname == "/week"){
+      week_btn.current.style.color = 'black';
+    }
+    else{
+      today_btn.current.style.color = 'black';
+    }
+    
     //refresh page
     var timer = setInterval(() => setDate(new Date()), 1000);
     return function cleanup() {
         clearInterval(timer);
-    };
-    
-    
+    };  
   }, []);
+
+  const divDataArray = [
+    { val1: 'Luni', icon: 'icon1', val3: '15°C' },
+    { val1: 'Marti', icon: 'icon2', val3: '20°C' },
+    { val1: 'Miercuri', icon: 'icon3', val3: '25°C' },
+  ];
 
   return (
     <>
@@ -186,11 +259,11 @@ function App() {
               <h1>{location}</h1>
             </div>
             <div className='middle_icon'>
-              <img src={"icons/" + icon + ".svg"} />
+              <img src={"/icons/" + icon + ".svg"} />
             </div>
             
             <div className='middle_degrees'>
-              <h1 className='degrees'>{temp}</h1>
+              <h1 className='degrees'>{temp_bigger}</h1>
               <h1 className='celsius'>°{celsiussymbol}</h1>
             </div>
 
@@ -228,11 +301,16 @@ function App() {
           </div>
 
           <div className='middle'>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
-            <div className='card'></div>
+            <div className='today week'>
+            {divDataAPI.map((divData, index) => (
+              <DynamicCards
+                key={index}
+                day={divData.day}
+                icon={divData.icon}
+                degrees={divData.degrees}
+              />
+            ))}
+            </div>
           </div>
 
           <div className='bottom'>
@@ -242,7 +320,7 @@ function App() {
             <div className='contain'>
               <div className='card uv'>
                 <div className='image'>
-                  <img src = "weather/icons8-uv-index-64.png"/>
+                  <img src = "/weather/icons8-uv-index-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
@@ -258,7 +336,7 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image'>
-                  <img src = "weather/icons8-windy-64.png"/>
+                  <img src = "/weather/icons8-windy-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
@@ -274,18 +352,20 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image img_special'>
-                  <img src = "weather/icons8-sun-64.png"/>
-                  <img className = "moon" src = "weather/icons8-moon-64.png"/>
+                  <img src = "/weather/icons8-sun-64.png"/>
+                  <img className = "moon" src = "/weather/icons8-moon-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
                     <p className='title'>Răsărit & apus</p>
                   </div>
-                  <div className='row row_flex_small'>
-                    <p className='value'>{sunrice}</p>
-                  </div>
-                  <div className='row row_flex_small'>
-                    <p className='value'>{sunset}</p>
+                  <div className='row_special'>
+                    <div className='row row_flex_small'>
+                      <p className='value'>{sunrice}</p>
+                    </div>
+                    <div className='row row_flex_small'>
+                      <p className='value'>{sunset}</p>
+                    </div>
                   </div>
                   <div className='row'>
                     <p className='value val_small'>{season}</p>
@@ -295,7 +375,7 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image'>
-                  <img src = "weather/icons8-humidity-64.png"/>
+                  <img src = "/weather/icons8-humidity-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
@@ -312,7 +392,7 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image img_special_viz'>
-                  <img src = "weather/icons8-summer-64.png"/>
+                  <img src = "/weather/icons8-summer-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
@@ -328,17 +408,17 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image'>
-                  <img src = "weather/icons8-air-100.png"/>
+                  <img src = "/weather/icons8-air-100.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
                     <p className='title'>Temperatura resimțită</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>{feelslike}</p>
+                    <p className='value'>{feelslike + "°" + celsiussymbol}</p>
                   </div>
                   <div className='row'>
-                    <p className='value val_small'>{feelslikeDescription  + "°" + celsiussymbol}</p>
+                    <p className='value val_small'>{feelslikeDescription }</p>
                   </div>
                 </div>
 
