@@ -55,13 +55,15 @@ function App() {
     //card small
     setLocation(json["resolvedAddress"]);
     setIcon(json["currentConditions"]["icon"]);
-
+    
+    //set temp big
     var temp_calc = json["currentConditions"]["temp"];
     if(Cookies.get('degrees') == "fahrenheit"){
       temp_calc = convert_f(temp_calc);
     }
     setTemp(temp_calc);
 
+    //today and week
     var currentUrl = window.location.pathname;
     const { days } = json;
     if(currentUrl == "/week"){
@@ -118,8 +120,90 @@ function App() {
         }
       });
     }
-
     setdivDataAPI(data_API);
+
+    //set card stats
+
+    //uv
+    setUv(json["currentConditions"]["uvindex"]);
+    if(parseInt(json["currentConditions"]["uvindex"]) <= 2)
+      setUvDescription("Scăzut 🟢");
+    else if(parseInt(json["currentConditions"]["uvindex"]) <= 5)
+      setUvDescription("Normal 🟡");
+    else if(parseInt(json["currentConditions"]["uvindex"]) <= 7)
+      setUvDescription("Înalt 🟠");
+    else if(parseInt(json["currentConditions"]["uvindex"]) <= 10)
+      setUvDescription("Foarte Înalt 🔴");
+    else if(parseInt(json["currentConditions"]["uvindex"]) > 11)
+      setUvDescription("Extrem 🟣");
+
+    setWind(json["currentConditions"]["windspeed"] + " km/h");
+    if(parseInt(json["currentConditions"]["windspeed"]) < 20)
+      setWindDescription("Viteză normală de vânt 🟢");
+    else if(parseInt(json["currentConditions"]["windspeed"]) < 30)
+      setWindDescription("Viteză moderată de vânt 🟡");
+    else if(parseInt(json["currentConditions"]["windspeed"]) < 55)
+      setWindDescription("Viteză puternică de vânt - Pericol de rafala 🟠");
+    else if(parseInt(json["currentConditions"]["windspeed"]) >= 55)
+      setWindDescription("Viteză foarte puternică de vânt - Pericol major 🔴");
+
+    var split = json["currentConditions"]["sunrise"].split(':');
+    setSunrice(split[0] + ":" + split[1]);
+    var split = json["currentConditions"]["sunset"].split(':');
+    setSunset(split[0] + ":" + split[1]);
+    if(new Date().getMonth() + 1 >= 3 && new Date().getMonth() + 1 <= 5)
+      setSeason("Primăvara");
+    else if(new Date().getMonth() + 1  >= 6 && new Date().getMonth() + 1  <= 8)
+      setSeason("Vara");
+    else if(new Date().getMonth() + 1  >= 9 && new Date().getMonth() + 1  <= 11)
+      setSeason("Toamna");
+    else if(new Date().getMonth() + 1  >= 12 && new Date().getMonth() + 1  <= 2)
+      setSeason("Iarna");
+
+    setHumidity(json["currentConditions"]["humidity"] + " %");
+    if(parseInt(json["currentConditions"]["humidity"]) < 30)
+      setHumidityDescription("Umiditate foarte scăzută 🔴");
+    else if(parseInt(json["currentConditions"]["humidity"]) < 60)
+      setHumidityDescription("Umiditate normală 🟢");
+    else if(parseInt(json["currentConditions"]["humidity"]) < 100)
+      setHumidityDescription("Umiditate ridicată. 🟠");
+
+  
+    setVisibility(json["currentConditions"]["visibility"] + " km");
+    if(parseFloat(json["currentConditions"]["visibility"]) >= 10)
+      setVisibilityDescription("Foarte bună vizibilitate 🟢");
+    else if(parseFloat(json["currentConditions"]["visibility"]) < 10)
+      setVisibilityDescription("Bună vizibilitate: 🔵");
+    else if(parseFloat(json["currentConditions"]["visibility"]) < 5)
+      setVisibilityDescription("Vizibilitate moderată. 🟡");
+    else if(parseFloat(json["currentConditions"]["visibility"]) < 1)
+      setVisibilityDescription("Slabă vizibilitate. 🟠");
+    else if(parseFloat(json["currentConditions"]["visibility"]) < 0.5)
+      setVisibilityDescription("Foarte slabă vizibilitate. 🔴");
+
+    var temp_calc = json["currentConditions"]["feelslike"];
+    if(Cookies.get('degrees') == "fahrenheit"){
+      temp_calc = convert_f(temp_calc) + "°F";
+    }
+    else
+      temp_calc += "°C";
+    setfeelslike(temp_calc);
+
+    if(parseFloat(json["currentConditions"]["feelslike"]) < -20)
+      setfeelslikeDescription("Foarte rece.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) < -10)
+      setfeelslikeDescription("Rece.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) < 10)
+      setfeelslikeDescription("Răcoros.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) < 20)
+      setfeelslikeDescription("Moderat.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) < 30)
+      setfeelslikeDescription("Cald.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) < 40)
+      setfeelslikeDescription("Foarte cald.");
+    else if(parseFloat(json["currentConditions"]["feelslike"]) >= 40)
+      setfeelslikeDescription("Caniculă.");
+
 
   };
 
@@ -268,8 +352,13 @@ function App() {
             </div>
 
             <div className='middle_day'>
-              <h1 className='day'>{dayNames[(new Date()).getDay()]},</h1>
-              <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
+              <div className='hours'>
+                <h1 className='day'>{dayNames[date.getDay()]},</h1>
+                <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
+              </div>
+              <div className='last_update'>
+                <h2>Ultima actualizare: {new Date().getHours() + ":" + new Date().getMinutes()}</h2>
+              </div>
             </div>
           </div>
 
@@ -408,14 +497,14 @@ function App() {
               </div>
               <div className='card'>
                 <div className='image'>
-                  <img src = "/weather/icons8-air-100.png"/>
+                  <img src = "/weather/icons8-celsius-64.png"/>
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
                     <p className='title'>Temperatura resimțită</p>
                   </div>
                   <div className='row row_flex'>
-                    <p className='value'>{feelslike + "°" + celsiussymbol}</p>
+                    <p className='value'>{feelslike}</p>
                   </div>
                   <div className='row'>
                     <p className='value val_small'>{feelslikeDescription }</p>
