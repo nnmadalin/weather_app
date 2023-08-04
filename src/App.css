@@ -235,6 +235,9 @@
 .card_big .top .right button:hover{
   transform: scale(1.1);
 }
+.card_big .top .left button:hover{
+  color: rgb(77, 77, 77)!important;
+}
 .card_big .top .left .select{
   color: black;
   text-underline-offset: 5px;
@@ -273,12 +276,16 @@
 .card_big .middle .card{
   background-color: white;
   width: 130px;
-  height: 160px;
+  height: 140px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  transition: all 0.3s;
+}
+.card_big .middle .card:hover{
+  transform: scale(1.05);
 }
 .card_big .middle .card .row{
   width: 100%;
@@ -288,7 +295,7 @@
   text-align: center;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 19px;
   flex: 1;
 }
 .card_big .middle .card .row *{
@@ -299,7 +306,7 @@
   flex: 1;
 }
 .card_big .middle .card .row img{
-  max-width: 60px;
+  max-width: 50px;
 }
 
 .card_big  .bottom{
@@ -332,7 +339,6 @@
   flex-direction: row;
   gap: 20px;
   transition: all 0.2s;
-  cursor: pointer;
 }
 .card_big  .bottom .card:hover{
   transform: scale(1.02);
