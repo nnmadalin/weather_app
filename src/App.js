@@ -6,6 +6,7 @@ import 'typeface-roboto';
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import DynamicCards from './DynamicCards';
+import DynamicCards_small from './DynamicCards_small';
 import { useHistory } from 'react-router-dom';
 
 
@@ -101,23 +102,21 @@ function App() {
       }));
       
       parsedData.forEach((item, index) => {
-        if(index % 2 == 0){
-          const [hours, minutes, seconds] = item.datetime_parsed.split(':');
-          var datetime_new = hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0');
-          
-          var temp_calc = item.temp_parsed;
-          if(Cookies.get('degrees') == "fahrenheit"){
-            temp_calc = convert_f(temp_calc) + "°F";
-          }
-          else
-          temp_calc += "°C";
-
-          data_API.push({
-            day: datetime_new,
-            icon: item.icon_parsed,
-            degrees: temp_calc,
-          });
+        const [hours, minutes, seconds] = item.datetime_parsed.split(':');
+        var datetime_new = hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0');
+        
+        var temp_calc = item.temp_parsed;
+        if(Cookies.get('degrees') == "fahrenheit"){
+          temp_calc = convert_f(temp_calc) + "°F";
         }
+        else
+        temp_calc += "°C";
+
+        data_API.push({
+          day: datetime_new,
+          icon: item.icon_parsed,
+          degrees: temp_calc,
+        });
       });
     }
     setdivDataAPI(data_API);
@@ -391,14 +390,27 @@ function App() {
 
           <div className='middle'>
             <div className='today week'>
-            {divDataAPI.map((divData, index) => (
-              <DynamicCards
-                key={index}
-                day={divData.day}
-                icon={divData.icon}
-                degrees={divData.degrees}
-              />
-            ))}
+            {
+              window.location.pathname == "/week" ? (
+                divDataAPI.map((divData, index) => (
+                  <DynamicCards
+                    key={index}
+                    day={divData.day}
+                    icon={divData.icon}
+                    degrees={divData.degrees}
+                  />
+                ))
+              ) : (
+                divDataAPI.map((divData, index) => (
+                  <DynamicCards_small
+                    key={index}
+                    day={divData.day}
+                    icon={divData.icon}
+                    degrees={divData.degrees}
+                  />
+                ))
+              )
+            }
             </div>
           </div>
 

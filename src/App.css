@@ -271,7 +271,7 @@
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
 }
 .card_big .middle .card{
   background-color: white;
@@ -297,6 +297,17 @@
   font-weight: bold;
   font-size: 19px;
   flex: 1;
+}
+.card_big .middle .card_small{
+  width: 95px!important;
+  height: 120px!important;
+  
+}
+.card_big .middle .card_small .small_text{
+  font-size: 17px!important;
+}
+.card_big .middle .row_img_small img{
+  max-width: 40px!important;
 }
 .card_big .middle .card .row *{
   margin: 0;
@@ -339,6 +350,7 @@
   gap: 20px;
   transition: all 0.2s;
 }
+
 .card_big  .bottom .card:hover{
   transform: scale(1.02);
 }
