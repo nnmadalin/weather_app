@@ -36,7 +36,7 @@ function App() {
   const [feelslike, setfeelslike] = useState('00.0');
   const [feelslikeDescription, setfeelslikeDescription] = useState('undefined');
 
-  const dayNames = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
+  const dayNames = ["Sunday", "Months", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   var [date, setDate] = useState(new Date());
   const [divDataAPI, setdivDataAPI] = useState([]);
 
@@ -126,59 +126,59 @@ function App() {
     //uv
     setUv(json["currentConditions"]["uvindex"]);
     if(parseInt(json["currentConditions"]["uvindex"]) <= 2)
-      setUvDescription("Scăzut 🟢");
+      setUvDescription("Low 🟢");
     else if(parseInt(json["currentConditions"]["uvindex"]) <= 5)
       setUvDescription("Normal 🟡");
     else if(parseInt(json["currentConditions"]["uvindex"]) <= 7)
-      setUvDescription("Înalt 🟠");
+      setUvDescription("High 🟠");
     else if(parseInt(json["currentConditions"]["uvindex"]) <= 10)
-      setUvDescription("Foarte Înalt 🔴");
+      setUvDescription("Very High 🔴");
     else if(parseInt(json["currentConditions"]["uvindex"]) > 11)
-      setUvDescription("Extrem 🟣");
+      setUvDescription("Extremely 🟣");
 
     setWind(json["currentConditions"]["windspeed"] + " km/h");
     if(parseInt(json["currentConditions"]["windspeed"]) < 20)
-      setWindDescription("Viteză normală de vânt 🟢");
+      setWindDescription("Normal wind speed 🟢");
     else if(parseInt(json["currentConditions"]["windspeed"]) < 30)
-      setWindDescription("Viteză moderată de vânt 🟡");
+      setWindDescription("Moderate wind speed 🟡");
     else if(parseInt(json["currentConditions"]["windspeed"]) < 55)
-      setWindDescription("Viteză puternică de vânt - Pericol de rafala 🟠");
+      setWindDescription("Strong wind speed - Danger of gust 🟠");
     else if(parseInt(json["currentConditions"]["windspeed"]) >= 55)
-      setWindDescription("Viteză foarte puternică de vânt - Pericol major 🔴");
+      setWindDescription("Very strong wind speed - Major danger 🔴");
 
     var split = json["currentConditions"]["sunrise"].split(':');
     setSunrice(split[0] + ":" + split[1]);
     var split = json["currentConditions"]["sunset"].split(':');
     setSunset(split[0] + ":" + split[1]);
     if(new Date().getMonth() + 1 >= 3 && new Date().getMonth() + 1 <= 5)
-      setSeason("Primăvara");
+      setSeason("Spring");
     else if(new Date().getMonth() + 1  >= 6 && new Date().getMonth() + 1  <= 8)
-      setSeason("Vara");
+      setSeason("Summer");
     else if(new Date().getMonth() + 1  >= 9 && new Date().getMonth() + 1  <= 11)
-      setSeason("Toamna");
+      setSeason("The autumn");
     else if(new Date().getMonth() + 1  >= 12 && new Date().getMonth() + 1  <= 2)
-      setSeason("Iarna");
+      setSeason("Winter");
 
     setHumidity(json["currentConditions"]["humidity"] + " %");
     if(parseInt(json["currentConditions"]["humidity"]) < 30)
-      setHumidityDescription("Umiditate foarte scăzută 🔴");
+      setHumidityDescription("Very low humidity 🔴");
     else if(parseInt(json["currentConditions"]["humidity"]) < 60)
-      setHumidityDescription("Umiditate normală 🟢");
+      setHumidityDescription("Normal humidity 🟢");
     else if(parseInt(json["currentConditions"]["humidity"]) < 100)
-      setHumidityDescription("Umiditate ridicată. 🟠");
+      setHumidityDescription("High humidity. 🟠");
 
   
     setVisibility(json["currentConditions"]["visibility"] + " km");
     if(parseFloat(json["currentConditions"]["visibility"]) >= 10)
-      setVisibilityDescription("Foarte bună vizibilitate 🟢");
+      setVisibilityDescription("Very good visibility 🟢");
     else if(parseFloat(json["currentConditions"]["visibility"]) < 10)
-      setVisibilityDescription("Bună vizibilitate: 🔵");
+      setVisibilityDescription("Good visibility: 🔵");
     else if(parseFloat(json["currentConditions"]["visibility"]) < 5)
-      setVisibilityDescription("Vizibilitate moderată. 🟡");
+      setVisibilityDescription("Moderate visibility. 🟡");
     else if(parseFloat(json["currentConditions"]["visibility"]) < 1)
-      setVisibilityDescription("Slabă vizibilitate. 🟠");
+      setVisibilityDescription("Poor visibility. 🟠");
     else if(parseFloat(json["currentConditions"]["visibility"]) < 0.5)
-      setVisibilityDescription("Foarte slabă vizibilitate. 🔴");
+      setVisibilityDescription("Very poor visibility. 🔴");
 
     var temp_calc = json["currentConditions"]["feelslike"];
     if(Cookies.get('degrees') == "fahrenheit"){
@@ -189,19 +189,19 @@ function App() {
     setfeelslike(temp_calc);
 
     if(parseFloat(json["currentConditions"]["feelslike"]) < -20)
-      setfeelslikeDescription("Foarte rece.");
+      setfeelslikeDescription("Very cold.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) < -10)
-      setfeelslikeDescription("Rece.");
+      setfeelslikeDescription("Cold.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) < 10)
-      setfeelslikeDescription("Răcoros.");
+      setfeelslikeDescription("Cool.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) < 20)
-      setfeelslikeDescription("Moderat.");
+      setfeelslikeDescription("Moderate.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) < 30)
-      setfeelslikeDescription("Cald.");
+      setfeelslikeDescription("Warm.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) < 40)
-      setfeelslikeDescription("Foarte cald.");
+      setfeelslikeDescription("Very hot.");
     else if(parseFloat(json["currentConditions"]["feelslike"]) >= 40)
-      setfeelslikeDescription("Caniculă.");
+      setfeelslikeDescription("Heat.");
 
 
   };
@@ -332,7 +332,7 @@ function App() {
           <div className='top'>
             <div className='top_search'>
               <FontAwesomeIcon icon={faMapMarkerAlt} size="lg"/>
-              <input type = "text" placeholder='Cauta o locatie' onChange={handleChange} value={inputlocation}/>
+              <input type = "text" placeholder='Search for a location' onChange={handleChange} value={inputlocation}/>
               <button onClick={buttonSubmit}><FaSearch /></button>
             </div>    
           </div>
@@ -356,7 +356,7 @@ function App() {
                 <h1 className='hour'>{date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')}</h1>
               </div>
               <div className='last_update'>
-                <h2>Ultima actualizare: {new Date().getHours() + ":" + new Date().getMinutes()}</h2>
+                <h2>Last update: {new Date().getHours() + ":" + new Date().getMinutes()}</h2>
               </div>
             </div>
           </div>
@@ -379,8 +379,8 @@ function App() {
         <div className='card_big'>
           <div className='top'>
             <div className='left'>
-              <button ref={today_btn} value="today" onClick={change_see}>Astăzi</button>
-              <button ref={week_btn} value="week" onClick={change_see}>Săptămână</button>
+              <button ref={today_btn} value="today" onClick={change_see}>Today</button>
+              <button ref={week_btn} value="week" onClick={change_see}>Week</button>
             </div>
             <div className='right'>
               <button ref={celcius_btn} value = "celsius" onClick={change_celsius}>°C</button>
@@ -416,7 +416,7 @@ function App() {
 
           <div className='bottom'>
             <div className='row'>
-              <p>Informații generale despre astăzi</p>
+              <p>General information about today</p>
             </div>
             <div className='contain'>
               <div className='card uv'>
@@ -425,7 +425,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Indice UV</p>
+                    <p className='title'>UV index</p>
                   </div>
                   <div className='row row_flex'>
                     <p className='value'>{uv}</p>
@@ -441,7 +441,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Starea vântului</p>
+                    <p className='title'>Wind condition</p>
                   </div>
                   <div className='row row_flex'>
                     <p className='value'>{wind}</p>
@@ -458,7 +458,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Răsărit & apus</p>
+                    <p className='title'>Sunrise & Sunset</p>
                   </div>
                   <div className='row_special'>
                     <div className='row row_flex_small'>
@@ -480,7 +480,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Umiditate</p>
+                    <p className='title'>Humidity</p>
                   </div>
                   <div className='row row_flex'>
                     <p className='value'>{humidity}</p>
@@ -497,7 +497,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Visibilitate</p>
+                    <p className='title'>Visibility</p>
                   </div>
                   <div className='row row_flex'>
                     <p className='value'>{visibility}</p>
@@ -513,7 +513,7 @@ function App() {
                 </div>
                 <div className='rows'>
                   <div className='row row_title'>
-                    <p className='title'>Temperatura resimțită</p>
+                    <p className='title'>The felt temperature</p>
                   </div>
                   <div className='row row_flex'>
                     <p className='value'>{feelslike}</p>
